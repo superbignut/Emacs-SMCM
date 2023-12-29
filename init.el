@@ -1,9 +1,18 @@
-;;;
-;;;
-;;;
 
-;;Close the menu-bar.
-(menu-bar-mode -1)
+;;; package --- Summary:
+;;;     This is a emacs configuration file with explanations(annotations) as much as possible.
+;;;     So that, with the help of "C-h h\k\v\o" and this file, Emacs is going to be your favourite editor.
+;;; Commentary:
+;;;     All the code was packed in just only one file increasingly, which will not be scattered into files.
+;;;     Beacuse, I think, a well-organized emacs.d is not friendly emough for the beginners\I.
+;;;     So that, you can read or look up the code line by line, and enentually you\I will master the Emacs.
+;;; Code:
+;;;     Alought there are some explanations behind the code, we still suggest u to figure out why it exist.
+;;;     Mostly, the reason will be found at its github README.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;Open the menu-bar, which is useful for novice(me).
+;;(menu-bar-mode -1)
 
 ;;Close the tool-bar.
 (tool-bar-mode -1)
@@ -22,9 +31,12 @@
 
 ;;Change sources from gnu to tsinghua.
 (setq package-archives '(
-			 ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") 
+			 ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
 			 ("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
 			 ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
+
+;;Enable the absolute line-numbers for all mode.
+(global-display-line-numbers-mode 1)
 
 ;;Load the FEATURE 'package in package.el.
 (require 'package)
@@ -44,10 +56,10 @@
 ;;Set the packages installed automatically if not already present.
 (setq use-package-always-ensure t)
 
-;Use package helm for searching in minibuffer.
+;Use package helm for searching intelligently in minibuffer.
 (use-package helm
-  :bind  (("M-x" . helm-M-x)
-	  ("C-x C-f" . helm-find-files))
+  :bind (("M-x" . helm-M-x)
+	 ("C-x C-f" . helm-find-files))
   ;;Alought helm-mode is setted, we still need to config two binds before.
   :config
   (helm-mode 1))
@@ -60,5 +72,17 @@
 	 company-idle-delay 0.2;Time to delay before complete.
 	 company-tooltip-align-annotations t;Annotations align at right.
 	 company-tooltip-limit 20;Maximum number of the candidates.
-	 company-show-numbers t));Use M-[num] to access candidates.
-;;
+	 company-show-quick-access t));Use M-[num] to access candidates quickly.
+
+;;Use package flycheck for syntax checking.
+(use-package flycheck
+  :init (global-flycheck-mode)
+  :config
+  ;; flycheck-load-path need to be set the same as the 'load-path.
+  (setq-default flycheck-emacs-lisp-load-path 'inherit))
+
+;;Just a test of require function.
+(require 'or-startup)
+
+
+;;; init.el ends here
