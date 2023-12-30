@@ -1,4 +1,3 @@
-
 ;;; package --- Summary:
 ;;;     This is a emacs configuration file with explanations(annotations) as much as possible.
 ;;;     So that, with the help of "C-h h\k\v\o" and this file, Emacs is going to be your favourite editor.
@@ -84,5 +83,16 @@
 ;;Just a test of require function.
 (require 'or-startup)
 
+;;Use package projectile for project interaction library.
+(use-package projectile
+  :init
+  (projectile-mode 1)
+  :bind (:map projectile-mode-map
+	      ("C-c p" . projectile-command-map))
+  :config
+  ;;Choose a shell for different os.
+  (setq shell-file-name "/bin/bash"))
+
+;;
 
 ;;; init.el ends here
