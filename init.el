@@ -1,59 +1,46 @@
-;; -*- lexical-binding: t; -*-
+;; -*- lexical-binding:
 
-;;Open the menu-bar, which is useful for novice(me).
-;;(menu-bar-mode -1)
+(add-to-list 'load-path
+	     (expand-file-name (concat user-emacs-directory "lisp")))
 
-;;Close the tool-bar.
 (tool-bar-mode -1)
 
-;;Close the scroll-bar.
 (scroll-bar-mode -1)
 
-;;Enable the absolute line-numbers for all mode.
+(show-paren-mode t)
+
 (global-display-line-numbers-mode 1)
 
-;;Set the cursor-type to bar-like.
-(setq-default cursor-type 'bar)
-;;
 (put 'narrow-to-region 'disabled nil)
 
-;;
 (defun open-init-file()
-  "Bind f2 to open init.el file , useful!!!."
+  "Use <f2>, open init.el."
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
 (global-set-key (kbd "<f2>") 'open-init-file)
 
-(global-set-key (kbd "C-h C-f") 'find-function)
-
 (global-set-key (kbd "M-[") 'previous-buffer)
 
 (global-set-key (kbd "M-]") 'next-buffer)
 
-;;Non-nil inhibit the startup screen.
+(setq-default cursor-type 'bar)
+
 (setq inhibit-startup-screen -1)
 
-;;Add folder:~/.emacs.d/lisp to the load-path.
-(add-to-list 'load-path
-	     (expand-file-name (concat user-emacs-directory "lisp")))
-;;Set custom setting file.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
-;;Change sources from gnu to tsinghua.
 (setq package-archives '(
 			 ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
 			 ("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
 			 ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 
-;;Load the FEATURE 'package in package.el.
 (require 'package)
 
-;;Initialize packages.
 (unless (bound-and-true-p package--initialized)
   (package-initialize))
 
-;;Update like sudo apt undate.
+
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -62,23 +49,24 @@
 (package-install 'marginalia)
 (marginalia-mode 1)
 
-;; (package-install 'helm-ag)
-
-;;Load FEATURE use-package.
-(require 'use-package)
-
-;;Set the packages installed automatically if not already present.
 (setq use-package-always-ensure t)
 
-;Use package helm for searching intelligently in minibuffer.
+(use-package paredit
+  :hook
+  (emacs-lisp-mode . paredit-mode)
+  (lisp-interaction-mode . paredit-mode))
+
+(use-package rainbow-delimiters
+  :hook
+  (emacs-lisp-mode . rainbow-delimiters-mode)
+  (lisp-interaction-mode . rainbow-delimiters-mode))
+
 (use-package helm
   :bind (("M-x" . helm-M-x)
 	 ("C-x C-f" . helm-find-files))
-  ;;Alought helm-mode is setted, we still need to config two binds before.
   :init
   (helm-mode 1))
 
-;;Use package company for complete-anything.
 (use-package company
   :hook(after-init . global-company-mode);
   :config
@@ -88,35 +76,24 @@
 	 company-tooltip-limit 20;Maximum number of the candidates.
 	 company-show-quick-access t));Use M-[num] to access candidates quickly.
 
-;;Use package flycheck for syntax checking.
-(use-package flycheck
-  :init (global-flycheck-mode)
-  :config
-  ;; flycheck-load-path need to be set the same as the 'load-path.
-  (setq-default flycheck-emacs-lisp-load-path 'inherit))
+;; (use-package flycheck
+;;   :init (global-flycheck-mode)
+;;   :config
+;;   (setq-default flycheck-emacs-lisp-load-path 'inherit))
 
-;;Just a test for require.
 (require 'or-startup)
 
-;;Use package projectile for project interaction library.
 (use-package projectile
   :init
   (projectile-mode 1)
   :bind (:map projectile-mode-map
 	      ("C-c p" . projectile-command-map))
   :config
-  ;;Choose a shell for different os.
   (setq shell-file-name "/bin/bash"))
 
-;;In order to use rust ,we need to Install lsp-mode and rust-mode.
 (use-package lsp-mode
-;; :init
-;;  (setq lsp-keymap-prefix "C-c l")
   :hook (
-;;         (c++-mode . lsp-deferred)
-;;	 (c-mode . lsp-deferred)
 	 (rust-mode . lsp-deferred))
-;;	 (python-mode . lsp-deferred))
   :commands lsp-deferred
   :config
   (setq rust-format-on-save t))
@@ -124,11 +101,9 @@
 (use-package rust-mode)
 
 (use-package all-the-icons
-  :ensure t
   :if (display-graphic-p))
 
 (use-package treemacs
-  :ensure t
   :defer t
   :init
   (with-eval-after-load 'winum
@@ -188,20 +163,6 @@
           treemacs-width-is-initially-locked       t
           treemacs-workspace-switch-cleanup        nil)
 
-    ;; The default width and height of the icons is 22 pixels. If you are
-    ;; using a Hi-DPI display, uncomment this to double the icon size.
-    ;;(treemacs-resize-icons 44)
-    ;; (treemacs-create-theme "Default"
-    ;;   :icon-directory (treemacs-join-path treemacs-dir "icons/default")
-    ;;   :config
-    ;;   (progn
-    ;; 	(treemacs-create-icon :file "root-open.png"   :fallback ""       :extensions (root-open))
-    ;; 	(treemacs-create-icon :file "root-closed.png" :fallback ""       :extensions (root-closed))
-    ;; 	(treemacs-create-icon :file "emacs.png"       :fallback "🗏 "     :extensions ("el" "elc"))
-    ;; 	(treemacs-create-icon :file "readme.png"      :fallback "🗏 "     :extensions ("readme.md"))
-    ;; 	(treemacs-create-icon :file "src-closed.png"  :fallback "📁 "     :extensions ("src-closed"))
-    ;; 	(treemacs-create-icon :file "src-open.png"    :fallback "📂 "     :extensions ("src-open"))
-    ;; 	(treemacs-create-icon :icon (all-the-icons-icon-for-file "yaml") :extensions ("yml" "yaml"))))
     
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
@@ -264,7 +225,7 @@
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
   ;; or for treemacs users
-  (setq doom-themes-treemacs-theme "doom-one")
+  (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config)
   (doom-themes-org-config))
 
@@ -282,8 +243,6 @@
   (ctrlf-mode t))
 
 (use-package helm-swoop
-  ;; 更多关于它的配置方法: https://github.com/ShingoFukuyama/helm-swoop
-  ;; 以下我的配置仅供参考
   :bind
   (("M-i" . helm-swoop)
    ("M-I" . helm-swoop-back-to-last-point)
@@ -295,13 +254,13 @@
    ("M-i" . helm-multi-swoop-all-from-helm-swoop)
    ("M-m" . helm-multi-swoop-current-mode-from-helm-swoop))
   :config
-  ;; 它像 helm-ag 一样，可以直接修改搜索结果 buffer 里的内容并 apply
   (setq helm-multi-swoop-edit-save t)
-  ;; 如何给它新开分割窗口
-  ;; If this value is t, split window inside the current window
   (setq helm-swoop-split-with-multiple-windows t))
 
 
+;; (package-install 'rainbow-delimiters)
+;; (rainbow-delimiters-mode)
+;; (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 ;;
 (toggle-frame-maximized)
 
