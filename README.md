@@ -23,36 +23,83 @@
 
 
 ## 内容：
-#### 以下内容为Ubuntu22.04中Emacs27的配置信息和个人理解，不保证他们的正确性和普适性，请选择食用。
+
+### 以下均为在Ubuntu22.04中对Emacs27的个人配置和理解，不保证内容完全正确。
+---
 
         (tool-bar-mode -1)
         (scroll-bar-mode -1)
-关闭工具栏、关闭屏幕右侧滚动条，我觉得工具栏(menu-bar)不仅好看而且有用，所以没关。
+        关闭工具栏、关闭屏幕右侧滚动条，我觉得工具栏(menu-bar)不仅好看而且有用，所以没关。
         
+---
         (show-paren-mode t)
-由于Elsp中括号很多，开启这个会将光标处的"("和")"同时高亮。
-
+        由于Elsp中括号很多，开启这个会将光标处的"("和")"同时高亮。
+---
         (global-display-line-numbers-mode 1)
-开启后，为所有窗口显示行号，但似乎还有其他的开启方法，开启的位置也有区别。
-
+        开启后，为所有窗口显示行号，但似乎还有其他的开启方法，开启的位置也有区别。
+---
         (put 'narrow-to-region 'disabled nil)
-使用"C-x n n"后自动生成，与narrow功能相关，新手可忽略。
-
+        使用"C-x n n"后自动生成，与narrow功能相关，新手可忽略。
+---
         (add-to-list 'load-path
                 (expand-file-name (concat user-emacs-directory "lisp")))
-连续调用三个函数，完成字符串的连接、把~拓展为家目录和把字符串添加到load-path，这么做是为了让配置文件更有结构和条理性，但需要结合require和provide函数使用，分三步：
-1. 把写好的abc.el文件放在.emacs.d/lisp/目录下 ~~(当然你的文件的名字可以不是abc)~~
-2. 在abc.el文件中加上,(应该是任意位置都可以):
-        
-        provide('abc)
+        连续调用三个函数，完成字符串的连接、把~拓展为家目录和把字符串添加到load-path。
+上述做是为了让配置文件更有结构和条理性，但需要结合require和provide函数使用，分三步：
 
-3. 在init.el中加上:
-        
-        require('abc)
+  1. 把写好的abc.el文件放在.emacs.d/lisp/目录下 ~~(当然你的文件的名字可以不是abc)~~
+  2. 在abc.el文件中加上,(应该是任意位置都可以):
+          
+          provide('abc)
+
+  3. 在init.el中加上:
+          
+          require('abc)
 如果对你也对load，require，package-install感到迷惑，那么请去GNU Emacs manual的第28.8节[Libraries of Lisp Code for Emacs][10]中寻找答案。尤其是最后一段：
 
-    Note that installing a package using package-install (see Package Installation) takes care of placing the package’s Lisp files in a directory where Emacs will find it, and also writes the necessary initialization code into your init files, making the above manual customizations unnecessary.
+Note that installing a package using package-install (see Package Installation) takes care of placing the package’s Lisp files in a directory where Emacs will find it, and also writes the necessary initialization code into your init files, making the above manual customizations unnecessary.
+
 大致含义就是，对于那些  通过使用package-install安装的包，再对他们require就是unnecessary的了。
+
+---
+        (defun open-init-file()
+        (interactive)
+        (find-file "~/.emacs.d/init.el"))
+
+        (global-set-key (kbd "<f2>") 'open-init-file)
+        以上代码来自子龙山人的教程，首先定义了一个可以交互的函数，可交互在这里指的是是否可以使用"M-x"进行调用，与是否可以对它绑定按键。实现的功能就是按F2直接切到init.el 入门必备功能。
+---
+        (global-set-key (kbd "M-[") 'previous-buffer)
+        (global-set-key (kbd "M-]") 'next-buffer)
+        切换到上一个buffer和切换到下一个buffer，本来的快捷键要按三个键，很难受。
+---
+
+        (setq-default cursor-type 'bar)
+        (setq inhibit-startup-screen -1)
+        光标改成竖线，关掉开始界面。
+---
+        (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+        给出自定义文件位置，这样就不会在init.el文件中添加某些自动生成的配置。一般第一天学Emacs都会遇到。
+---
+
+        (setq package-archives '(
+			 ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+			 ("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+			 ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
+        首先把包的下载源切到国内，代码来自清华源。
+
+        (require 'package)
+        'package是一个build-in的包，所以不require应该也行。
+
+        (unless (bound-and-true-p package--initialized)
+        (package-initialize))
+        我猜，这就应该是GNU Emacs manual的第28.8节说的，加载所有使用package-install安装的包。
+        我们只需要初始化一下就行，但只是猜测。
+
+        (unless (package-installed-p 'use-package)
+        (package-refresh-contents)
+        (package-install 'use-package))
+        参考别人的解释：类似于先 sudo apt update 再 sudo apt install 'use-package。
+---
 
 
 [1]:https://zhuanlan.zhihu.com/p/341512250
