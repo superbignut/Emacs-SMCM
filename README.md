@@ -52,7 +52,7 @@
 如果对你也对load，require，package-install感到迷惑，那么请去GNU Emacs manual的第28.8节[Libraries of Lisp Code for Emacs][10]中寻找答案。尤其是最后一段：
 
     Note that installing a package using package-install (see Package Installation) takes care of placing the package’s Lisp files in a directory where Emacs will find it, and also writes the necessary initialization code into your init files, making the above manual customizations unnecessary.
-大致含义就是，你要是用了package-install，那么require就unnecessary了。
+大致含义就是，对于那些  通过使用package-install安装的包，再对他们require就是unnecessary的了。
 
 
 [1]:https://zhuanlan.zhihu.com/p/341512250
