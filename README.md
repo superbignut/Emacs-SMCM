@@ -9,7 +9,7 @@
 
     ~~This is an Emacs configuration file writen line by line，with annotations provided wherever possible.~~
 + ### 2. 建议：
-    Emacs具有极其舒适的学习曲线。学习 Emacs的过程如同打怪升级，当你不停的与官方文档和各种包进行较量之后，你的经验条会一点点增加。在升级的途中，你不仅会学到普通技能，也会在6级学大，有钱了还可以打造装备. .  . .  因此我建议 ~~我自己~~ 好好学习 Emacs。
+    Emacs具有极其舒适的学习曲线。学习 Emacs的过程如同打怪升级，当你不停的与官方文档和各种包进行较量之后，你的经验条会一点点增加。在升级的途中，你不仅会学到普通技能，也会在6级学大，还可以打造. . . . 因此我建议 ~~我自己~~ 好好学习 Emacs。
 
 + ### 3. 参考：
     1. Emacs欢迎界面上的Emacs tutorial。包含了Emacs的最基本按键和功能，入门第一看。
@@ -137,7 +137,12 @@
         这个包让我最大的感受是在"C-h f"时，能在右侧的margin部分快速扫一眼函数的功能。
         除此之外，它在Github上给出了其他功能，并且更建议和consult一起使用。
 ---
+helm-buffers-list 类似于 “C-x 
+helm-occur 当前文件搜索
 
+
+
+---
 [1]:https://zhuanlan.zhihu.com/p/341512250
 [2]:https://nyk.ma/posts/emacs-write-your-own/
 [3]:https://space.bilibili.com/292659700?spm_id_from=333.337.search-card.all.click
