@@ -9,7 +9,8 @@
 
     ~~This is an Emacs configuration file writen line by line，with annotations provided wherever possible.~~
 + ### 2. 建议：
-    Emacs具有极其舒适的学习曲线，因此我建议 ~~我自己~~ 好好学习 Emacs，配置出只属于自己的Editor。
+    Emacs具有极其舒适的学习曲线。学习 Emacs的过程如同打怪升级，当你不停的与官方文档和各种包进行较量之后，你的经验条会一点点增加。在升级的途中，你不仅会学到普通技能，也会在6级学大，有钱了还可以打造装备. .  . .  因此我建议 ~~我自己~~ 好好学习 Emacs。
+
 + ### 3. 参考：
     1. Emacs欢迎界面上的Emacs tutorial。包含了Emacs的最基本按键和功能，入门第一看。
     2. B站/知乎上的[《Emacs高手修炼手册》][1]一步一步配置出Emacs的基本功能，入门必备。
@@ -44,8 +45,8 @@
         (add-to-list 'load-path
                 (expand-file-name (concat user-emacs-directory "lisp")))
         连续调用三个函数，完成字符串的连接、把~拓展为家目录和把字符串添加到load-path。
-上述做是为了让配置文件更有结构和条理性，但需要结合require和provide函数使用，分三步：
-
+---
+上述做法是为了让配置文件更有结构和条理性，但需要结合require和provide函数使用，分三步：
   1. 把写好的abc.el文件放在.emacs.d/lisp/目录下 ~~(当然你的文件的名字可以不是abc)~~
   2. 在abc.el文件中加上,(应该是任意位置都可以):
           
@@ -54,9 +55,9 @@
   3. 在init.el中加上:
           
           require('abc)
-如果对你也对load，require，package-install感到迷惑，那么请去GNU Emacs manual的第28.8节[Libraries of Lisp Code for Emacs][10]中寻找答案。尤其是最后一段：
+如果对你也对load，require，package-install感到迷惑，除了这三个函数的help文档，GNU Emacs manual的第28.8节[Libraries of Lisp Code for Emacs][10]中也有说明。尤其是最后一段：
 
-Note that installing a package using package-install (see Package Installation) takes care of placing the package’s Lisp files in a directory where Emacs will find it, and also writes the necessary initialization code into your init files, making the above manual customizations unnecessary.
+>Note that installing a package using package-install (see Package Installation) >takes care of placing the package’s Lisp files in a directory where Emacs will find >it, and also writes the necessary initialization code into your init files, making >the above manual customizations unnecessary.
 
 大致含义就是，对于那些  通过使用package-install安装的包，再对他们require就是unnecessary的了。
 
@@ -66,7 +67,8 @@ Note that installing a package using package-install (see Package Installation) 
         (find-file "~/.emacs.d/init.el"))
 
         (global-set-key (kbd "<f2>") 'open-init-file)
-        以上代码来自子龙山人的教程，首先定义了一个可以交互的函数，可交互在这里指的是是否可以使用"M-x"进行调用，与是否可以对它绑定按键。实现的功能就是按F2直接切到init.el 入门必备功能。
+        以上代码来自参考4，首先定义了一个可以交互的函数，可交互在这里指的是是否可以使用"M-x"进行调用,
+        与是否可以对它绑定按键。实现的功能就是按F2直接切到init.el，入门必备功能。
 ---
         (global-set-key (kbd "M-[") 'previous-buffer)
         (global-set-key (kbd "M-]") 'next-buffer)
@@ -88,19 +90,53 @@ Note that installing a package using package-install (see Package Installation) 
         首先把包的下载源切到国内，代码来自清华源。
 
         (require 'package)
-        'package是一个build-in的包，所以不require应该也行。
+        'package是一个build-in的包，所以不require应该也行，这里不确定。
 
+---
         (unless (bound-and-true-p package--initialized)
         (package-initialize))
-        我猜，这就应该是GNU Emacs manual的第28.8节说的，加载所有使用package-install安装的包。
+        猜测，这就应该是GNU Emacs manual的第28.8节说的，加载所有使用package-install安装的包。
         我们只需要初始化一下就行，但只是猜测。
 
+---
         (unless (package-installed-p 'use-package)
         (package-refresh-contents)
         (package-install 'use-package))
         参考别人的解释：类似于先 sudo apt update 再 sudo apt install 'use-package。
 ---
 
+然后就到了6级，学习我们的大招 ~~ultimate ability~~ ，也就是use-package，但去 Emacs官网首页的最下方可以看到，在 Emacs29.1版本中use-package已经被include 进Emacs。因此在29.1之后的版本，上述代码应该可以被require代替。
+
+对于use-package用法，请看官方README。常用的有init,config,bind,hook这四个。大致功能为load前配置，load后配置，绑定快捷键，绑定hook。
+
+---
+
+        (setq use-package-always-ensure t)
+        和关键字:ensure功能一样，保证使用到的包已被安装。
+---
+下面开始使用use-package进行各种包安装：
+
+        (use-package paredit
+        :hook
+        (emacs-lisp-mode . paredit-mode)
+        (lisp-interaction-mode . paredit-mode))
+        使用Paredit可以自动配对和删除()和"",也就是当输入与删除"("时，自动输入与删除")",无法手动删除")"。
+        并且绑定了两个hook，分别是，在写lisp时候触发，和在*scratch* buffer中触发。
+        但当你输入了一个中文的括号，会有bug。
+---
+        (use-package rainbow-delimiters
+        :hook
+        (emacs-lisp-mode . rainbow-delimiters-mode)
+        (lisp-interaction-mode . rainbow-delimiters-mode))
+        不同的括号对有着不同的颜色。
+        hook同上。
+---
+        (use-package marginalia
+        :init
+        (marginalia-mode))
+        这个包让我最大的感受是在"C-h f"时，能在右侧的margin部分快速扫一眼函数的功能。
+        除此之外，它在Github上给出了其他功能，并且更建议和consult一起使用。
+---
 
 [1]:https://zhuanlan.zhihu.com/p/341512250
 [2]:https://nyk.ma/posts/emacs-write-your-own/
