@@ -138,6 +138,24 @@
         这个包让我最大的感受是在"C-h f"时，能在右侧的margin部分快速扫一眼函数的功能。
         除此之外，它在Github上给出了其他功能，并且更建议和consult一起使用。
 ---
+紧接着请出重量级package:Helm。他的官网给出的定义是：Emacs incremental completion and selection narrowing framework。我还暂时不能理解这句话。但我可以深刻的意识到的地方是，我使用到的功能只是Helm的冰山一角。Helm还有很多地方，有待发掘。
+
+        (use-package helm
+        :init
+        (helm-mode 1)
+        :bind (("M-x" . helm-M-x) ;; 1 执行command
+                ("C-x C-f" . helm-find-files);; 2 搜索文件
+                ("M-y" . helm-show-kill-ring) ;; 3 列出有哪些“C-k"项，类似于剪切板
+                ("C-x b" . helm-mini) ;; 4 这么设置后和5的功能基本是一样的
+                ("C-x C-b" . helm-buffers-list) ;; 5 
+                ("C-c h o" . helm-occur);; 6 当前文件内搜索
+                ("C-c h i" . helm-imenu);; 7 加强版imenu
+                ;;helm-man-woman C-c c m ;; 8 可以看linux和Emacs的man手册
+                ;; helm-find ;; 9 类似于find
+                ("C-c h g" . helm-do-grep-ag))) ;; 10 这个应该是项目内搜索
+        1-7的用法全部都是用helm的一个命令覆盖了Emacs本身的按键绑定。
+        Helm = 强无敌
+        
 <!-- helm-buffers-list 类似于 “C-x 
 helm-occur 当前文件搜索 -->
 
