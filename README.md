@@ -21,11 +21,12 @@
     7. 最官方的Emacs手册[GNU Emacs manual][7]，但是内容实在太多了。
     8. 最官方的Elisp参考手册[Emacs Lisp Reference Manual][8]，内容也是特别多。
     9. Emacs官网的不那么硬核的[An Introduction to Programming in Emacs Lisp][9]，前几章入门必备。
+    10. Github上tuhdo的一系列教程[Emacs mini manual series][11]，甚至还有Helm教程，入门强推。
 
 
 ## 内容：
 
-### 以下均为在Ubuntu22.04中对Emacs27的个人配置和理解，不保证内容完全正确。
+### 以下均为在Ubuntu22.04中对Emacs27/29的个人配置和理解，不保证内容完全正确。
 ---
 
         (tool-bar-mode -1)
@@ -137,8 +138,8 @@
         这个包让我最大的感受是在"C-h f"时，能在右侧的margin部分快速扫一眼函数的功能。
         除此之外，它在Github上给出了其他功能，并且更建议和consult一起使用。
 ---
-helm-buffers-list 类似于 “C-x 
-helm-occur 当前文件搜索
+<!-- helm-buffers-list 类似于 “C-x 
+helm-occur 当前文件搜索 -->
 
 
 
@@ -153,3 +154,4 @@ helm-occur 当前文件搜索
 [8]:https://www.gnu.org/software/emacs/manual/html_node/elisp/index.html
 [9]:https://www.gnu.org/software/emacs/manual/html_node/eintr/index.html
 [10]:https://www.gnu.org/software/emacs/manual/html_node/emacs/Lisp-Libraries.html
+[11]:https://tuhdo.github.io/index.html
